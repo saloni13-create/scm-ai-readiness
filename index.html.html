@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic AI Readiness Assessment — Enterprise Demand Planning</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0B1E3D;
+    --navy2: #112952;
+    --blue: #1A5FA8;
+    --cyan: #0EA5C9;
+    --teal: #0D9488;
+    --amber: #F59E0B;
+    --red: #EF4444;
+    --green: #10B981;
+    --light: #EFF6FF;
+    --muted: #94A3B8;
+    --text: #E2EBF6;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(26,95,168,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26,95,168,0.07) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header { margin-bottom: 52px; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(14,165,201,0.12);
+    border: 1px solid rgba(14,165,201,0.3);
+    color: var(--cyan);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+  .badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--cyan);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100%{opacity:1;transform:scale(1)}
+    50%{opacity:0.5;transform:scale(1.4)}
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  h1 span { color: var(--cyan); }
+
+  .subtitle {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 620px;
+    margin-bottom: 32px;
+  }
+
+  /* Maturity stages strip */
+  .stages-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 48px;
+  }
+  .stage-item {
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.04);
+    border-top: 3px solid transparent;
+    transition: all 0.3s;
+  }
+  .stage-item.s1 { border-color: #64748B; }
+  .stage-item.s2 { border-color: var(--amber); }
+  .stage-item.s3 { border-color: var(--blue); }
+  .stage-item.s4 { border-color: var(--cyan); }
+  .stage-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .stage-item.s1 .stage-num { color: #64748B; }
+  .stage-item.s2 .stage-num { color: var(--amber); }
+  .stage-item.s3 .stage-num { color: var(--blue); }
+  .stage-item.s4 .stage-num { color: var(--cyan); }
+  .stage-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .stage-desc { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.3; }
+
+  /* Progress */
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.06);
+    border-radius: 100px;
+    height: 4px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    border-radius: 100px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 36px;
+  }
+  .progress-label span { color: var(--cyan); font-weight: 500; }
+
+  /* Section */
+  .section {
+    margin-bottom: 40px;
+    animation: fadeUp 0.4s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .section-subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* Question card */
+  .q-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .q-card:hover { border-color: rgba(14,165,201,0.2); }
+  .q-card.answered { border-color: rgba(14,165,201,0.35); background: rgba(14,165,201,0.05); }
+
+  .q-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .q-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  @media(max-width:600px){ .options { grid-template-columns: 1fr; } }
+
+  .opt {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.4;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .opt:hover {
+    background: rgba(14,165,201,0.1);
+    border-color: rgba(14,165,201,0.4);
+    color: var(--white);
+  }
+  .opt.selected {
+    background: rgba(14,165,201,0.15);
+    border-color: var(--cyan);
+    color: var(--white);
+  }
+  .opt-score {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--cyan);
+    flex-shrink: 0;
+    margin-top: 1px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .opt.selected .opt-score { opacity: 1; }
+  .opt-text { flex: 1; }
+
+  /* Submit */
+  .submit-wrap { text-align: center; margin-top: 48px; }
+  .submit-btn {
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    color: white;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 16px 48px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(14,165,201,0.3); }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .submit-hint { font-size: 12px; color: var(--muted); margin-top: 12px; }
+  #answered-count { color: var(--cyan); }
+
+  /* RESULTS */
+  #results {
+    display: none;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .result-hero {
+    background: linear-gradient(135deg, var(--navy2), #0D2145);
+    border: 1px solid rgba(14,165,201,0.2);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(14,165,201,0.15), transparent 70%);
+    pointer-events: none;
+  }
+
+  .result-stage-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 8px;
+  }
+  .result-stage-name {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .result-score-display {
+    font-family: 'Syne', sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1;
+    margin: 20px 0;
+  }
+  .result-score-max { font-size: 24px; color: var(--muted); }
+  .result-tagline {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Dimension scores */
+  .dim-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  @media(max-width:600px){ .dim-grid { grid-template-columns: 1fr; } }
+
+  .dim-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .dim-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dim-bar-wrap {
+    background: rgba(255,255,255,0.08);
+    border-radius: 100px;
+    height: 6px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .dim-bar {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 1s ease 0.3s;
+    width: 0%;
+  }
+  .dim-score-txt {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+  }
+  .dim-score-val { color: var(--white); font-weight: 500; }
+
+  /* Roadmap */
+  .roadmap-section { margin-bottom: 32px; }
+  .roadmap-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .roadmap-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+  }
+
+  .roadmap-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .roadmap-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .roadmap-content { flex: 1; }
+  .roadmap-item-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .roadmap-item-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  .priority-high .roadmap-dot { background: rgba(239,68,68,0.2); color: #EF4444; border: 1px solid rgba(239,68,68,0.3); }
+  .priority-med  .roadmap-dot { background: rgba(245,158,11,0.2); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+  .priority-low  .roadmap-dot { background: rgba(16,185,129,0.2); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+
+  /* Platform fit */
+  .platform-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  @media(max-width:600px){ .platform-grid { grid-template-columns: 1fr; } }
+
+  .platform-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.2s;
+  }
+  .platform-card.recommended {
+    border-color: var(--cyan);
+    background: rgba(14,165,201,0.08);
+  }
+  .platform-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .platform-fit {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 100px;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+  .fit-high { background: rgba(16,185,129,0.2); color: var(--green); }
+  .fit-med  { background: rgba(245,158,11,0.2);  color: var(--amber); }
+  .fit-low  { background: rgba(100,116,139,0.2); color: #94A3B8; }
+  .platform-note { font-size: 12px; color: var(--muted); line-height: 1.4; }
+  .rec-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 6px;
+  }
+
+  /* Restart */
+  .restart-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 16px;
+  }
+  .restart-btn:hover { border-color: rgba(255,255,255,0.4); color: var(--white); }
+
+  .attribution {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(148,163,184,0.5);
+    margin-top: 48px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header" id="header">
+    <div class="badge">Enterprise SCM Tool</div>
+    <h1>Agentic AI Readiness<br><span>Assessment</span></h1>
+    <p class="subtitle">Evaluate your organization's readiness to move from AI-assisted forecasting toward autonomous demand planning. Based on comparative analysis of Blue Yonder, SAP IBP, Oracle SCM, Kinaxis Maestro & o9 Solutions.</p>
+
+    <!-- Maturity stages -->
+    <div class="stages-strip">
+      <div class="stage-item s1">
+        <div class="stage-num">Stage 1</div>
+        <div class="stage-label">Statistical</div>
+        <div class="stage-desc">Historical data & planner overrides</div>
+      </div>
+      <div class="stage-item s2">
+        <div class="stage-num">Stage 2</div>
+        <div class="stage-label">AI/ML Forecasting</div>
+        <div class="stage-desc">ML models, demand sensing</div>
+      </div>
+      <div class="stage-item s3">
+        <div class="stage-num">Stage 3</div>
+        <div class="stage-label">AI-Assisted</div>
+        <div class="stage-desc">Exceptions, scenarios, recommendations</div>
+      </div>
+      <div class="stage-item s4">
+        <div class="stage-num">Stage 4</div>
+        <div class="stage-label">Agentic AI</div>
+        <div class="stage-desc">Autonomous monitoring & orchestration</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASSESSMENT FORM -->
+  <div id="assessment">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+    <div class="progress-label"><span id="answered-count">0</span> of 20 questions answered</div>
+
+    <!-- DIMENSION 1: Data Quality -->
+    <div class="section" style="animation-delay:0.05s">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(14,165,201,0.15)">🗄️</div>
+        <div>
+          <div class="section-title">Data Quality & Infrastructure</div>
+          <div class="section-subtitle">Foundation for any AI system — the most common failure point</div>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-1">
+        <div class="q-num">Q1</div>
+        <div class="q-text">How would you describe the quality of your demand history data (completeness, accuracy, consistency)?</div>
+        <div class="options">
+          <button class="opt" onclick="select(1,1,'Data is fragmented, siloed across systems, significant gaps')">
+            <span class="opt-score">1</span><span class="opt-text">Fragmented & siloed, significant gaps</span>
+          </button>
+          <button class="opt" onclick="select(1,2,'Data exists but requires heavy manual cleansing before use')">
+            <span class="opt-score">2</span><span class="opt-text">Exists but needs heavy manual cleansing</span>
+          </button>
+          <button class="opt" onclick="select(1,3,'Reasonably clean, some exceptions, managed in ERP/WMS')">
+            <span class="opt-score">3</span><span class="opt-text">Reasonably clean, managed in ERP/WMS</span>
+          </button>
+          <button class="opt" onclick="select(1,4,'High quality, governed data lake / data warehouse in place')">
+            <span class="opt-score">4</span><span class="opt-text">High quality, governed data lake in place</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-2">
+        <div class="q-num">Q2</div>
+        <div class="q-text">Do you currently ingest external signals (weather, promotions, macroeconomic indicators, competitor data) into your demand planning process?</div>
+        <div class="options">
+          <button class="opt" onclick="select(2,1,'No external signals used — only internal sales history')">
+            <span class="opt-score">1</span><span class="opt-text">No — only internal sales history</span>
+          </button>
+          <button class="opt" onclick="select(2,2,'Some signals (promotions) used manually by planners')">
+            <span class="opt-score">2</span><span class="opt-text">Some signals used manually by planners</span>
+          </button>
+          <button class="opt" onclick="select(2,3,'2-3 external signals integrated, partially automated')">
+            <span class="opt-score">3</span><span class="opt-text">2–3 external signals, partially automated</span>
+          </button>
+          <button class="opt" onclick="select(2,4,'Multiple signals auto-ingested and fed into forecasting models')">
+            <span class="opt-score">4</span><span class="opt-text">Multiple signals auto-ingested into models</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-3">
+        <div class="q-num">Q3</div>
+        <div class="q-text">How well integrated is your demand planning system with ERP, inventory, and order management systems?</div>
+        <div class="options">
+          <button class="opt" onclick="select(3,1,'Manual exports/imports — spreadsheet-driven integration')">
+            <span class="opt-score">1</span><span class="opt-text">Manual exports/imports, spreadsheet-driven</span>
+          </button>
+          <button class="opt" onclick="select(3,2,'Batch integrations, some latency, periodic sync')">
+            <span class="opt-score">2</span><span class="opt-text">Batch integrations, some latency</span>
+          </button>
+          <button class="opt" onclick="select(3,3,'Near real-time integration with ERP, limited to key modules')">
+            <span class="opt-score">3</span><span class="opt-text">Near real-time ERP integration, key modules</span>
+          </button>
+          <button class="opt" onclick="select(3,4,'Full real-time bidirectional integration across planning systems')">
+            <span class="opt-score">4</span><span class="opt-text">Full real-time bidirectional integration</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-4">
+        <div class="q-num">Q4</div>
+        <div class="q-text">Does your organization have a formal data governance framework covering demand planning data?</div>
+        <div class="options">
+          <button class="opt" onclick="select(4,1,'No formal governance — data ownership unclear')">
+            <span class="opt-score">1</span><span class="opt-text">No formal governance, ownership unclear</span>
+          </button>
+          <button class="opt" onclick="select(4,2,'Informal ownership, some documentation but not enforced')">
+            <span class="opt-score">2</span><span class="opt-text">Informal ownership, not enforced</span>
+          </button>
+          <button class="opt" onclick="select(4,3,'Governance policy exists, partially implemented')">
+            <span class="opt-score">3</span><span class="opt-text">Governance policy exists, partly implemented</span>
+          </button>
+          <button class="opt" onclick="select(4,4,'Mature governance with data stewards, lineage tracking, audits')">
+            <span class="opt-score">4</span><span class="opt-text">Mature governance with data stewards & audits</span>
+          </button>
+        </div>
+      </div>
+      <div class="q-card" id="qc-5">
+        <div class="q-num">Q5</div>
+        <div class="q-text">What is the granularity and history length of your demand data?</div>
+        <div class="options">
+          <button class="opt" onclick="select(5,1,'Less than 1 year, aggregated at product category level')">
+            <span class="opt-score">1</span><span class="opt-text">Under 1 year, category-level aggregation</span>
+          </button>
+          <button class="opt" onclick="select(5,2,'1–2 years at SKU level, some gaps')">
+            <span class="opt-score">2</span><span class="opt-text">1–2 years at SKU level, some gaps</span>
+          </button>
+          <button class="opt" onclick="select(5,3,'3+ years at SKU-location level, reasonably complete')">
+            <span class="opt-score">3</span><span class="opt-text">3+ years at SKU-location, reasonably complete</span>
+          </button>
+          <button class="opt" onclick="select(5,4,'5+ years at daily/weekly SKU-location-channel granularity')">
+            <span class="opt-score">4</span><span class="opt-text">5+ years at daily SKU-location-channel</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIMENSION 2: Workflow & Process -->
+    <div class="section" style="animation-delay:0.1s">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(245,158,11,0.15)">⚙️</div>
+        <div>
+          <div class="section-title">Planning Workflows & Processes</div>
+          <div class="section-subtitle">AI agents can only orchestrate workflows that already exist</div>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-6">
+        <div class="q-num">Q6</div>
+        <div class="q-text">How structured and documented are your demand planning workflows (S&OP cycle, exception handling, consensus process)?</div>
+        <div class="options">
+          <button class="opt" onclick="select(6,1,'Ad hoc — process varies by planner and month')">
+            <span class="opt-score">1</span><span class="opt-text">Ad hoc, varies by planner</span>
+          </button>
+          <button class="opt" onclick="select(6,2,'Partially documented, key steps defined but not enforced')">
+            <span class="opt-score">2</span><span class="opt-text">Partially documented, not enforced</span>
+          </button>
+          <button class="opt" onclick="select(6,3,'Documented S&OP process with defined roles and timelines')">
+            <span class="opt-score">3</span><span class="opt-text">Documented S&OP with defined roles</span>
+          </button>
+          <button class="opt" onclick="select(6,4,'Mature, digitized, measurable S&OP with KPIs and accountability')">
+            <span class="opt-score">4</span><span class="opt-text">Mature digitized S&OP with KPIs</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-7">
+        <div class="q-num">Q7</div>
+        <div class="q-text">How does your team currently handle demand exceptions and forecast alerts?</div>
+        <div class="options">
+          <button class="opt" onclick="select(7,1,'Planners review all SKUs manually on fixed schedule')">
+            <span class="opt-score">1</span><span class="opt-text">Manual review of all SKUs on fixed schedule</span>
+          </button>
+          <button class="opt" onclick="select(7,2,'Some automated alerts but planners still review most items')">
+            <span class="opt-score">2</span><span class="opt-text">Some alerts, but most items reviewed manually</span>
+          </button>
+          <button class="opt" onclick="select(7,3,'Exception-based planning — system flags anomalies for review')">
+            <span class="opt-score">3</span><span class="opt-text">Exception-based — system flags anomalies</span>
+          </button>
+          <button class="opt" onclick="select(7,4,'Automated exception routing with priority scoring and escalation')">
+            <span class="opt-score">4</span><span class="opt-text">Auto exception routing with priority scoring</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-8">
+        <div class="q-num">Q8</div>
+        <div class="q-text">Can your organization run scenario simulations (what-if analysis) within your planning system?</div>
+        <div class="options">
+          <button class="opt" onclick="select(8,1,'No — scenarios modelled in Excel outside the system')">
+            <span class="opt-score">1</span><span class="opt-text">No — Excel-based outside the system</span>
+          </button>
+          <button class="opt" onclick="select(8,2,'Basic what-if in the system, limited to 1-2 variables')">
+            <span class="opt-score">2</span><span class="opt-text">Basic what-if, limited variables</span>
+          </button>
+          <button class="opt" onclick="select(8,3,'Multi-variable scenario modelling in the planning tool')">
+            <span class="opt-score">3</span><span class="opt-text">Multi-variable scenarios in planning tool</span>
+          </button>
+          <button class="opt" onclick="select(8,4,'AI-generated scenario recommendations with confidence intervals')">
+            <span class="opt-score">4</span><span class="opt-text">AI-generated scenarios with confidence ranges</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-9">
+        <div class="q-num">Q9</div>
+        <div class="q-text">How does your planning system connect demand decisions to downstream supply chain actions (procurement, production, inventory)?</div>
+        <div class="options">
+          <button class="opt" onclick="select(9,1,'Manual hand-offs — planners send emails to procurement/operations')">
+            <span class="opt-score">1</span><span class="opt-text">Manual handoffs via email</span>
+          </button>
+          <button class="opt" onclick="select(9,2,'Periodic uploads to ERP, some automation for standard flows')">
+            <span class="opt-score">2</span><span class="opt-text">Periodic ERP uploads, partial automation</span>
+          </button>
+          <button class="opt" onclick="select(9,3,'Integrated planning — demand signal flows to supply planning automatically')">
+            <span class="opt-score">3</span><span class="opt-text">Demand flows to supply planning automatically</span>
+          </button>
+          <button class="opt" onclick="select(9,4,'End-to-end orchestration — demand triggers supply, procurement & logistics actions')">
+            <span class="opt-score">4</span><span class="opt-text">End-to-end: demand triggers supply & procurement</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-10">
+        <div class="q-num">Q10</div>
+        <div class="q-text">How frequently is your demand plan updated and how fast can planners respond to market changes?</div>
+        <div class="options">
+          <button class="opt" onclick="select(10,1,'Monthly cycle — cannot respond to changes within the month')">
+            <span class="opt-score">1</span><span class="opt-text">Monthly cycle, slow response to changes</span>
+          </button>
+          <button class="opt" onclick="select(10,2,'Weekly refresh, changes take 3–5 days to propagate')">
+            <span class="opt-score">2</span><span class="opt-text">Weekly refresh, 3–5 day propagation</span>
+          </button>
+          <button class="opt" onclick="select(10,3,'Daily updates, planners can respond within 24–48 hours')">
+            <span class="opt-score">3</span><span class="opt-text">Daily updates, 24–48 hour response</span>
+          </button>
+          <button class="opt" onclick="select(10,4,'Continuous planning — near real-time updates, same-day response')">
+            <span class="opt-score">4</span><span class="opt-text">Continuous planning, same-day response</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIMENSION 3: Governance & Trust -->
+    <div class="section" style="animation-delay:0.15s">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(16,185,129,0.15)">🔒</div>
+        <div>
+          <div class="section-title">Governance, Trust & Approval Rules</div>
+          <div class="section-subtitle">Agentic AI must operate within defined guardrails — without these, it cannot be deployed</div>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-11">
+        <div class="q-num">Q11</div>
+        <div class="q-text">Does your organization have defined rules for when AI recommendations can be auto-executed vs. when human approval is required?</div>
+        <div class="options">
+          <button class="opt" onclick="select(11,1,'No — all AI output reviewed manually before any action')">
+            <span class="opt-score">1</span><span class="opt-text">No — all AI output reviewed manually</span>
+          </button>
+          <button class="opt" onclick="select(11,2,'Informal understanding, not formally documented or enforced')">
+            <span class="opt-score">2</span><span class="opt-text">Informal understanding, not documented</span>
+          </button>
+          <button class="opt" onclick="select(11,3,'Documented approval thresholds for key decision types')">
+            <span class="opt-score">3</span><span class="opt-text">Documented thresholds for key decisions</span>
+          </button>
+          <button class="opt" onclick="select(11,4,'Formal policy: tiered autonomy levels with audit trail and override controls')">
+            <span class="opt-score">4</span><span class="opt-text">Tiered autonomy policy with audit trail</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-12">
+        <div class="q-num">Q12</div>
+        <div class="q-text">How does your organization's leadership view AI-driven autonomous decision-making in supply chain?</div>
+        <div class="options">
+          <button class="opt" onclick="select(12,1,'Skeptical — leadership does not trust AI recommendations yet')">
+            <span class="opt-score">1</span><span class="opt-text">Skeptical, leadership doesn't trust AI yet</span>
+          </button>
+          <button class="opt" onclick="select(12,2,'Cautious — willing to pilot but not ready to scale')">
+            <span class="opt-score">2</span><span class="opt-text">Cautious — willing to pilot, not yet scale</span>
+          </button>
+          <button class="opt" onclick="select(12,3,'Supportive — active investment in AI roadmap')">
+            <span class="opt-score">3</span><span class="opt-text">Supportive — active AI investment</span>
+          </button>
+          <button class="opt" onclick="select(12,4,'Champions — leadership sponsors AI transformation at board level')">
+            <span class="opt-score">4</span><span class="opt-text">Champions — board-level AI sponsorship</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-13">
+        <div class="q-num">Q13</div>
+        <div class="q-text">Can your planning system explain WHY it produced a particular forecast or recommendation (explainability)?</div>
+        <div class="options">
+          <button class="opt" onclick="select(13,1,'No — system is a black box, output only')">
+            <span class="opt-score">1</span><span class="opt-text">No — black box, output only</span>
+          </button>
+          <button class="opt" onclick="select(13,2,'Basic explanation (e.g. "seasonality factor") but not detailed')">
+            <span class="opt-score">2</span><span class="opt-text">Basic explanation, not detailed</span>
+          </button>
+          <button class="opt" onclick="select(13,3,'Key drivers shown (promotions, weather, pricing) with contribution')">
+            <span class="opt-score">3</span><span class="opt-text">Key drivers shown with contribution %</span>
+          </button>
+          <button class="opt" onclick="select(13,4,'Full explainability: driver waterfall, confidence bands, counterfactuals')">
+            <span class="opt-score">4</span><span class="opt-text">Full explainability with driver waterfall</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-14">
+        <div class="q-num">Q14</div>
+        <div class="q-text">Does your organization track and audit planner overrides of AI recommendations?</div>
+        <div class="options">
+          <button class="opt" onclick="select(14,1,'No tracking — overrides are undocumented')">
+            <span class="opt-score">1</span><span class="opt-text">No tracking of overrides</span>
+          </button>
+          <button class="opt" onclick="select(14,2,'Overrides logged but not systematically reviewed')">
+            <span class="opt-score">2</span><span class="opt-text">Logged but not reviewed</span>
+          </button>
+          <button class="opt" onclick="select(14,3,'Override rates tracked and reviewed in monthly S&OP')">
+            <span class="opt-score">3</span><span class="opt-text">Override rates reviewed in S&OP</span>
+          </button>
+          <button class="opt" onclick="select(14,4,'Override accuracy tracked — used to retrain models and improve governance')">
+            <span class="opt-score">4</span><span class="opt-text">Override accuracy tracked & used for retraining</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-15">
+        <div class="q-num">Q15</div>
+        <div class="q-text">How is AI/ML model performance monitored and maintained in your demand planning environment?</div>
+        <div class="options">
+          <button class="opt" onclick="select(15,1,'No AI/ML models currently in production')">
+            <span class="opt-score">1</span><span class="opt-text">No AI/ML models in production</span>
+          </button>
+          <button class="opt" onclick="select(15,2,'Models deployed but monitored informally, no retraining schedule')">
+            <span class="opt-score">2</span><span class="opt-text">Deployed but no formal retraining schedule</span>
+          </button>
+          <button class="opt" onclick="select(15,3,'Quarterly model reviews with MAPE/bias tracking')">
+            <span class="opt-score">3</span><span class="opt-text">Quarterly reviews with MAPE/bias tracking</span>
+          </button>
+          <button class="opt" onclick="select(15,4,'Automated model monitoring with drift detection and continuous retraining')">
+            <span class="opt-score">4</span><span class="opt-text">Automated drift detection & continuous retraining</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIMENSION 4: Org Readiness -->
+    <div class="section" style="animation-delay:0.2s">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(139,92,246,0.15)">👥</div>
+        <div>
+          <div class="section-title">Organizational & Human Readiness</div>
+          <div class="section-subtitle">The most underestimated barrier — technology is often ready before people are</div>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-16">
+        <div class="q-num">Q16</div>
+        <div class="q-text">What is the current AI/data literacy level of your demand planning team?</div>
+        <div class="options">
+          <button class="opt" onclick="select(16,1,'Low — team is Excel-proficient, no AI/ML exposure')">
+            <span class="opt-score">1</span><span class="opt-text">Low — Excel-proficient, no AI exposure</span>
+          </button>
+          <button class="opt" onclick="select(16,2,'Basic awareness — team understands AI concepts but not hands-on')">
+            <span class="opt-score">2</span><span class="opt-text">Basic awareness, not hands-on</span>
+          </button>
+          <button class="opt" onclick="select(16,3,'Intermediate — team uses AI tools and interprets outputs confidently')">
+            <span class="opt-score">3</span><span class="opt-text">Intermediate — uses and interprets AI tools</span>
+          </button>
+          <button class="opt" onclick="select(16,4,'Advanced — team includes data analysts, can configure and challenge models')">
+            <span class="opt-score">4</span><span class="opt-text">Advanced — includes data analysts, can configure models</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-17">
+        <div class="q-num">Q17</div>
+        <div class="q-text">Does your organization have a dedicated team or capability for AI/data science in supply chain?</div>
+        <div class="options">
+          <button class="opt" onclick="select(17,1,'No dedicated capability — IT handles all systems')">
+            <span class="opt-score">1</span><span class="opt-text">No dedicated capability, IT handles all</span>
+          </button>
+          <button class="opt" onclick="select(17,2,'Shared data team, supply chain is one of many priorities')">
+            <span class="opt-score">2</span><span class="opt-text">Shared data team, SCM is one of many priorities</span>
+          </button>
+          <button class="opt" onclick="select(17,3,'Dedicated SCM analytics role(s) within supply chain team')">
+            <span class="opt-score">3</span><span class="opt-text">Dedicated SCM analytics roles in the team</span>
+          </button>
+          <button class="opt" onclick="select(17,4,'Embedded data science / AI engineering in supply chain function')">
+            <span class="opt-score">4</span><span class="opt-text">Embedded AI engineering in SCM function</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-18">
+        <div class="q-num">Q18</div>
+        <div class="q-text">How does your planning team respond when AI recommendations differ from their intuition?</div>
+        <div class="options">
+          <button class="opt" onclick="select(18,1,'Always override AI — trust their own experience exclusively')">
+            <span class="opt-score">1</span><span class="opt-text">Always override — trust experience exclusively</span>
+          </button>
+          <button class="opt" onclick="select(18,2,'Mostly override AI unless variance is very large')">
+            <span class="opt-score">2</span><span class="opt-text">Mostly override unless variance is large</span>
+          </button>
+          <button class="opt" onclick="select(18,3,'Investigate the discrepancy, apply judgement, often follow AI')">
+            <span class="opt-score">3</span><span class="opt-text">Investigate discrepancy, often follow AI</span>
+          </button>
+          <button class="opt" onclick="select(18,4,'Follow AI by default, override only with documented business justification')">
+            <span class="opt-score">4</span><span class="opt-text">Follow AI by default, document overrides</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-19">
+        <div class="q-num">Q19</div>
+        <div class="q-text">Has your organization completed any AI/ML pilots or proof-of-concepts in demand planning or supply chain?</div>
+        <div class="options">
+          <button class="opt" onclick="select(19,1,'No pilots or POCs attempted')">
+            <span class="opt-score">1</span><span class="opt-text">No pilots or POCs attempted</span>
+          </button>
+          <button class="opt" onclick="select(19,2,'1 pilot completed, results were mixed or inconclusive')">
+            <span class="opt-score">2</span><span class="opt-text">1 pilot, mixed or inconclusive results</span>
+          </button>
+          <button class="opt" onclick="select(19,3,'Successful pilot with measurable outcomes, scaling evaluation underway')">
+            <span class="opt-score">3</span><span class="opt-text">Successful pilot, evaluating scale-up</span>
+          </button>
+          <button class="opt" onclick="select(19,4,'Multiple successful implementations with proven ROI in production')">
+            <span class="opt-score">4</span><span class="opt-text">Multiple live implementations with proven ROI</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card" id="qc-20">
+        <div class="q-num">Q20</div>
+        <div class="q-text">Does your organization have a formal change management process for technology-driven transformation in supply chain?</div>
+        <div class="options">
+          <button class="opt" onclick="select(20,1,'No change management — new tools deployed without structured adoption plan')">
+            <span class="opt-score">1</span><span class="opt-text">No change management process</span>
+          </button>
+          <button class="opt" onclick="select(20,2,'Training provided but adoption tracked informally')">
+            <span class="opt-score">2</span><span class="opt-text">Training provided, informal adoption tracking</span>
+          </button>
+          <button class="opt" onclick="select(20,3,'Structured rollout with training, champions, and feedback loops')">
+            <span class="opt-score">3</span><span class="opt-text">Structured rollout with champions & feedback</span>
+          </button>
+          <button class="opt" onclick="select(20,4,'Mature change management with org readiness assessment, comms, and KPIs')">
+            <span class="opt-score">4</span><span class="opt-text">Mature change management with readiness KPIs</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button class="submit-btn" id="submit-btn" onclick="showResults()" disabled>
+        Generate My Readiness Report
+      </button>
+      <div class="submit-hint"><span id="answered-count2">0</span> / 20 answered — complete all questions to unlock your report</div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="result-hero">
+      <div class="result-stage-label" id="res-stage-label">Your Maturity Stage</div>
+      <div class="result-stage-name" id="res-stage-name">—</div>
+      <div class="result-score-display">
+        <span id="res-score">—</span><span class="result-score-max"> / 80</span>
+      </div>
+      <div class="result-tagline" id="res-tagline">—</div>
+    </div>
+
+    <!-- Dimension scores -->
+    <div style="margin-bottom:12px">
+      <div class="roadmap-title">Dimension Breakdown</div>
+    </div>
+    <div class="dim-grid">
+      <div class="dim-card">
+        <div class="dim-name">🗄️ Data Quality & Infrastructure</div>
+        <div class="dim-bar-wrap"><div class="dim-bar" id="bar-data" style="background:linear-gradient(90deg,#0EA5C9,#0D9488)"></div></div>
+        <div class="dim-score-txt"><span>Readiness</span><span class="dim-score-val" id="score-data">—/20</span></div>
+      </div>
+      <div class="dim-card">
+        <div class="dim-name">⚙️ Workflows & Processes</div>
+        <div class="dim-bar-wrap"><div class="dim-bar" id="bar-workflow" style="background:linear-gradient(90deg,#F59E0B,#EF4444)"></div></div>
+        <div class="dim-score-txt"><span>Readiness</span><span class="dim-score-val" id="score-workflow">—/20</span></div>
+      </div>
+      <div class="dim-card">
+        <div class="dim-name">🔒 Governance & Trust</div>
+        <div class="dim-bar-wrap"><div class="dim-bar" id="bar-gov" style="background:linear-gradient(90deg,#10B981,#0D9488)"></div></div>
+        <div class="dim-score-txt"><span>Readiness</span><span class="dim-score-val" id="score-gov">—/20</span></div>
+      </div>
+      <div class="dim-card">
+        <div class="dim-name">👥 Organizational Readiness</div>
+        <div class="dim-bar-wrap"><div class="dim-bar" id="bar-org" style="background:linear-gradient(90deg,#8B5CF6,#1A5FA8)"></div></div>
+        <div class="dim-score-txt"><span>Readiness</span><span class="dim-score-val" id="score-org">—/20</span></div>
+      </div>
+    </div>
+
+    <!-- Roadmap -->
+    <div class="roadmap-section">
+      <div class="roadmap-title">Your Prioritized Action Roadmap</div>
+      <div id="roadmap-items"></div>
+    </div>
+
+    <!-- Platform fit -->
+    <div>
+      <div class="roadmap-title">Platform Fit at Your Maturity Stage</div>
+      <div class="platform-grid" id="platform-grid"></div>
+    </div>
+
+    <div style="text-align:center; margin-top:32px">
+      <button class="restart-btn" onclick="restart()">↩ Retake Assessment</button>
+    </div>
+  </div>
+
+  <div class="attribution">
+    Agentic AI Readiness Assessment for Enterprise Demand Planning<br>
+    Based on: Blue Yonder · SAP IBP · Oracle SCM · Kinaxis Maestro · o9 Solutions<br>
+    Framework by Saloni Adhikari | IIT Delhi eMBA 2025–27
+  </div>
+</div>
+
+<script>
+const answers = {};
+let answeredCount = 0;
+
+function select(qNum, score, text) {
+  const wasAnswered = answers[qNum] !== undefined;
+  answers[qNum] = score;
+  if (!wasAnswered) {
+    answeredCount++;
+    updateProgress();
+  }
+  // Update UI
+  const card = document.getElementById('qc-' + qNum);
+  card.classList.add('answered');
+  card.querySelectorAll('.opt').forEach(btn => {
+    btn.classList.remove('selected');
+    if (btn.textContent.trim().includes(text.trim().substring(0, 20))) {
+      btn.classList.add('selected');
+    }
+  });
+  // Match by score position
+  const opts = card.querySelectorAll('.opt');
+  opts.forEach((btn, i) => { btn.classList.remove('selected'); });
+  opts[score - 1].classList.add('selected');
+}
+
+function updateProgress() {
+  const pct = (answeredCount / 20) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('answered-count').textContent = answeredCount;
+  document.getElementById('answered-count2').textContent = answeredCount;
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = answeredCount < 20;
+}
+
+function showResults() {
+  const total = Object.values(answers).reduce((a,b) => a+b, 0);
+  const dataScore     = [1,2,3,4,5].map(q => answers[q]||0).reduce((a,b)=>a+b,0);
+  const workflowScore = [6,7,8,9,10].map(q => answers[q]||0).reduce((a,b)=>a+b,0);
+  const govScore      = [11,12,13,14,15].map(q => answers[q]||0).reduce((a,b)=>a+b,0);
+  const orgScore      = [16,17,18,19,20].map(q => answers[q]||0).reduce((a,b)=>a+b,0);
+
+  // Determine stage
+  let stage, stageName, tagline, stageColor;
+  if (total <= 25) {
+    stage = 1; stageName = "Stage 1 — Statistical Forecasting";
+    tagline = "Your organization is in the foundational phase. Focus on data quality and process documentation before investing in AI tools — without these, AI will fail to deliver value.";
+    stageColor = "#64748B";
+  } else if (total <= 45) {
+    stage = 2; stageName = "Stage 2 — AI/ML Forecasting";
+    tagline = "You have the foundations for AI-assisted planning. Key gaps in governance and workflow maturity are limiting your ability to trust and scale AI recommendations.";
+    stageColor = "#F59E0B";
+  } else if (total <= 62) {
+    stage = 3; stageName = "Stage 3 — AI-Assisted Planning";
+    tagline = "Strong position. You are ready to pilot agentic AI in controlled workflows. Focus on building approval frameworks and expanding external signal integration.";
+    stageColor = "#1A5FA8";
+  } else {
+    stage = 4; stageName = "Stage 4 — Agentic AI Ready";
+    tagline = "You are at the frontier. Your data, processes, governance, and organizational readiness can support agentic AI deployment. Focus on selecting the right platform and defining your first autonomous workflow.";
+    stageColor = "#0EA5C9";
+  }
+
+  document.getElementById('res-stage-label').textContent = `Maturity Assessment Result`;
+  document.getElementById('res-stage-name').textContent = stageName;
+  document.getElementById('res-stage-name').style.color = stageColor;
+  document.getElementById('res-score').textContent = total;
+  document.getElementById('res-score').style.color = stageColor;
+  document.getElementById('res-tagline').textContent = tagline;
+
+  // Dimension bars
+  setTimeout(() => {
+    document.getElementById('bar-data').style.width     = (dataScore/20*100) + '%';
+    document.getElementById('bar-workflow').style.width = (workflowScore/20*100) + '%';
+    document.getElementById('bar-gov').style.width      = (govScore/20*100) + '%';
+    document.getElementById('bar-org').style.width      = (orgScore/20*100) + '%';
+  }, 200);
+  document.getElementById('score-data').textContent     = dataScore + '/20';
+  document.getElementById('score-workflow').textContent = workflowScore + '/20';
+  document.getElementById('score-gov').textContent      = govScore + '/20';
+  document.getElementById('score-org').textContent      = orgScore + '/20';
+
+  // Build roadmap
+  const roadmapItems = [];
+  const dims = [
+    { name: 'Data Quality & Infrastructure', score: dataScore, icon: '🗄️',
+      low: 'Establish a unified demand data repository. Prioritize data cleansing and ERP integration before any AI investment.',
+      mid: 'Expand external signal ingestion (promotions, weather, macroeconomics). Move toward a governed data lake.',
+      high: 'Implement real-time bidirectional data flows. Evaluate streaming architecture for continuous planning.' },
+    { name: 'Planning Workflows & Processes', score: workflowScore, icon: '⚙️',
+      low: 'Document and standardize your S&OP process first. AI cannot automate what is not yet repeatable.',
+      mid: 'Implement exception-based planning to reduce planner workload. Add scenario simulation capability.',
+      high: 'Connect demand decisions to supply chain execution in real-time. Enable continuous planning cycles.' },
+    { name: 'Governance & Trust', score: govScore, icon: '🔒',
+      low: 'Define AI approval thresholds immediately. Without guardrails, agentic AI cannot be deployed safely.',
+      mid: 'Formalize model monitoring and override tracking. Build explainability into your platform requirements.',
+      high: 'Implement tiered autonomy policies. Automate model drift detection and continuous retraining pipelines.' },
+    { name: 'Organizational Readiness', score: orgScore, icon: '👥',
+      low: 'Invest in AI literacy training for planning teams before deploying new tools. Resistance is the #1 failure mode.',
+      mid: 'Appoint SCM analytics champions. Run a small AI pilot with measurable success metrics.',
+      high: 'Embed AI/data science capability within the SCM function. Build a culture of AI-first decision-making.' },
+  ];
+
+  dims.sort((a,b) => a.score - b.score); // lowest first = highest priority
+
+  const container = document.getElementById('roadmap-items');
+  container.innerHTML = '';
+  dims.forEach((dim, i) => {
+    const pct = dim.score / 20;
+    const priority = pct < 0.5 ? 'priority-high' : pct < 0.75 ? 'priority-med' : 'priority-low';
+    const label = pct < 0.5 ? '!' : pct < 0.75 ? '2' : '3';
+    const action = pct < 0.5 ? dim.low : pct < 0.75 ? dim.mid : dim.high;
+    const priorityText = pct < 0.5 ? 'Critical Gap' : pct < 0.75 ? 'Growth Area' : 'Maintain & Extend';
+    container.innerHTML += `
+      <div class="roadmap-item ${priority}">
+        <div class="roadmap-dot">${i+1}</div>
+        <div class="roadmap-content">
+          <div class="roadmap-item-title">${dim.icon} ${dim.name} <span style="font-size:11px;color:${pct<0.5?'#EF4444':pct<0.75?'#F59E0B':'#10B981'};font-weight:500">[${priorityText} — ${dim.score}/20]</span></div>
+          <div class="roadmap-item-desc">${action}</div>
+        </div>
+      </div>`;
+  });
+
+  // Platform fit
+  const platforms = [
+    { name: 'Blue Yonder', note: 'Best for retail/CPG with strong agentic planning vision. Requires transformation investment.', fitStages: [1,2,3,4] },
+    { name: 'SAP IBP', note: 'Strongest ERP integration. Best value when already on SAP. High implementation readiness needed.', fitStages: [3,4] },
+    { name: 'Oracle SCM', note: 'Suite-oriented cloud platform. Strong workflow automation for mid-maturity organizations.', fitStages: [2,3,4] },
+    { name: 'Kinaxis Maestro', note: 'Best-in-class real-time orchestration. Highest agentic maturity. Requires strong planning discipline.', fitStages: [3,4] },
+    { name: 'o9 Solutions', note: 'AI-native planning vision. Ideal for organizations pursuing full digital transformation.', fitStages: [2,3,4] },
+  ];
+
+  const pgrid = document.getElementById('platform-grid');
+  pgrid.innerHTML = '';
+  platforms.forEach(p => {
+    const fits = p.fitStages.includes(stage);
+    const fitLevel = stage >= 3 && p.fitStages.includes(stage) ? 'fit-high' :
+                     stage === 2 && p.fitStages.includes(stage) ? 'fit-med' : 'fit-low';
+    const fitText = fitLevel === 'fit-high' ? 'Strong Fit' : fitLevel === 'fit-med' ? 'Potential Fit' : 'Premature';
+    pgrid.innerHTML += `
+      <div class="platform-card ${fitLevel === 'fit-high' ? 'recommended' : ''}">
+        ${fitLevel === 'fit-high' ? '<div class="rec-badge">★ Recommended</div>' : ''}
+        <div class="platform-name">${p.name}</div>
+        <span class="platform-fit ${fitLevel}">${fitText}</span>
+        <div class="platform-note">${p.note}</div>
+      </div>`;
+  });
+
+  // Show results
+  document.getElementById('assessment').style.display = 'none';
+  document.getElementById('header').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restart() {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  answeredCount = 0;
+  updateProgress();
+  document.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('answered'));
+  document.getElementById('assessment').style.display = 'block';
+  document.getElementById('header').style.display = 'block';
+  document.getElementById('results').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

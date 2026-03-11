@@ -1200,6 +1200,33 @@ function showResults() {
   document.getElementById('header').style.display = 'none';
   document.getElementById('results').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Send data to Google Sheets
+  submitToGoogleSheets(total, stage, stageName, dataScore, workflowScore, govScore, orgScore);
+}
+
+function submitToGoogleSheets(total, stage, stageName, dataScore, workflowScore, govScore, orgScore) {
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_Iy9xxvrx9svK8WD9fUVrZmy-w-axvz6I5NHBfIr0mPrswEajmKDJA2W-NPo9cdMsmw/exec';
+  const payload = {
+    timestamp: new Date().toISOString(),
+    totalScore: total,
+    stage: stage,
+    stageName: stageName,
+    dataScore: dataScore,
+    workflowScore: workflowScore,
+    govScore: govScore,
+    orgScore: orgScore,
+    q1:  answers[1]||0,  q2:  answers[2]||0,  q3:  answers[3]||0,  q4:  answers[4]||0,  q5:  answers[5]||0,
+    q6:  answers[6]||0,  q7:  answers[7]||0,  q8:  answers[8]||0,  q9:  answers[9]||0,  q10: answers[10]||0,
+    q11: answers[11]||0, q12: answers[12]||0, q13: answers[13]||0, q14: answers[14]||0, q15: answers[15]||0,
+    q16: answers[16]||0, q17: answers[17]||0, q18: answers[18]||0, q19: answers[19]||0, q20: answers[20]||0,
+  };
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(err => console.log('Submission note:', err));
 }
 
 function restart() {
